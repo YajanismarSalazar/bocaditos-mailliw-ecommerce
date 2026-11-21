@@ -1,3 +1,5 @@
+const WHATSAPP_PHONE = "584129424001"; // Pon tu número con código de país (58), sin '+' ni espacios ni guiones
+
 const PRODUCTS = [
   {
     id: 1,
@@ -68,6 +70,12 @@ const checkoutBtn = document.getElementById("checkoutBtn");
 const customerNameInput = document.getElementById("customerName");
 const orderReceipt = document.getElementById("orderReceipt");
 const kpiOrders = document.getElementById("kpiOrders");
+
+function setCheckoutButtonLabel() {
+  if (checkoutBtn) {
+    checkoutBtn.textContent = "CONFIRMAR PEDIDO";
+  }
+}
 
 function formatMoney(amount) {
   return `$${amount.toFixed(2)}`;
@@ -183,9 +191,28 @@ function renderCart() {
   cartTotal.textContent = formatMoney(total);
 }
 
+function buildOrderSummary({ orderNumber, customer, now, lines, subtotal, packaging, total }) {
+  return (
+    `*NUEVO PEDIDO #${orderNumber} — BOCADITOS MAILLIW*\n` +
+    `• *Cliente:* ${customer}\n` +
+    `• *Fecha:* ${now}\n` +
+    `-------------------------\n` +
+    `*Detalle del pedido:*\n` +
+    `${lines}\n` +
+    `-------------------------\n` +
+    `• *Subtotal:* ${formatMoney(subtotal)}\n` +
+    `• *Empaque (5%):* ${formatMoney(packaging)}\n` +
+    `• *TOTAL A PAGAR:* ${formatMoney(total)}`
+  );
+}
+
+function buildWhatsAppOrderUrl(message) {
+  return `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
+}
+
 function handleCheckout() {
   if (cart.length === 0) {
-    alert("Agrega al menos un postre antes de generar la orden.");
+    alert("Agrega al menos un postre antes de confirmar el pedido.");
     return;
   }
 
@@ -208,18 +235,27 @@ function handleCheckout() {
   dailyOrdersCount += 1;
   kpiOrders.textContent = dailyOrdersCount;
 
-  orderReceipt.textContent =
-    `ORDEN REGISTRADA\n` +
-    `Cliente: ${customer}\n` +
-    `Fecha: ${now}\n` +
-    `-------------------------\n` +
-    `${lines}\n` +
-    `-------------------------\n` +
-    `Subtotal: ${formatMoney(subtotal)}\n` +
-    `Empaque (5%): ${formatMoney(packaging)}\n` +
-    `Total a pagar: ${formatMoney(total)}`;
+  const orderSummary = buildOrderSummary({
+    orderNumber: dailyOrdersCount,
+    customer,
+    now,
+    lines,
+    subtotal,
+    packaging,
+    total
+  });
 
+  const plainReceipt = orderSummary.replace(/\*/g, "");
+  orderReceipt.textContent = plainReceipt;
   orderReceipt.classList.remove("hidden");
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(plainReceipt).catch(() => {});
+  }
+
+  const whatsappUrl = buildWhatsAppOrderUrl(orderSummary);
+  window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
   cart = [];
   renderCart();
 }
@@ -249,5 +285,6 @@ closeCartBtn.addEventListener("click", closeCart);
 backdrop.addEventListener("click", closeCart);
 checkoutBtn.addEventListener("click", handleCheckout);
 
+setCheckoutButtonLabel();
 renderCatalog();
 renderCart();
