@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bocaditos Mailliw | Tienda de Postres</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">BM</span>
+      <div>
+        <h1>Bocaditos Mailliw</h1>
+        <p class="subtitle">Repostería artesanal y postres por encargo</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="kpi-pill">
+        <span>Pedidos hoy:</span>
+        <strong id="kpiOrders">12</strong>
+      </div>
+      <button id="toggleCartBtn" class="cart-btn">
+        Carrito (<span id="cartCount">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h2>Postres artesanales hechos con detalle</h2>
+        <p>Explora nuestro catálogo, filtra por categoría y arma tu pedido en segundos.</p>
+      </div>
+      <div class="filters" id="categoryFilters">
+        <button class="filter-btn active" data-category="Todos">Todos</button>
+        <button class="filter-btn" data-category="Tortas y Marquesas">Tortas y Marquesas</button>
+        <button class="filter-btn" data-category="Galletas y Porciones">Galletas y Porciones</button>
+        <button class="filter-btn" data-category="Pies y Especiales">Pies y Especiales</button>
+      </div>
+    </section>
+
+    <section aria-label="Catálogo de postres">
+      <div id="catalogGrid" class="catalog-grid"></div>
+    </section>
+  </main>
+
+  <aside id="cartDrawer" class="cart-drawer hidden" aria-label="Carrito de compras">
+    <div class="cart-header">
+      <h3>Tu Pedido</h3>
+      <button id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div id="cartItems" class="cart-items">
+      <p class="empty-msg">Tu carrito está vacío. Agrega un postre para comenzar.</p>
+    </div>
+
+    <div class="cart-footer">
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">$0.00</strong>
+      </div>
+      <div class="summary-row muted">
+        <span>Empaque y conservación (5%)</span>
+        <span id="cartPackaging">$0.00</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total estimado</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+
+      <div class="customer-box">
+        <label for="customerName">Nombre del cliente</label>
+        <input type="text" id="customerName" placeholder="Ej. Yajanismar Salazar" />
+        <button id="checkoutBtn" class="primary-btn">Generar Orden de Pedido</button>
+      </div>
+
+      <div id="orderReceipt" class="order-receipt hidden"></div>
+    </div>
+  </aside>
+
+  <div id="backdrop" class="backdrop hidden"></div>
+
+  <footer class="footer">
+    <p>Bocaditos Mailliw — Proyecto de E-commerce para Ingeniería en Sistemas</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
