@@ -8,60 +8,117 @@ const PAGO_MOVIL_DATA = {
   rif: "J208837067"
 };
 
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Tortas Completas",
-    category: "Tortas completas",
-    stock: 20,
-    description: "Tortas y pies completos ordenados por tipo de menor a mayor precio.",
-    optionLabel: "Selecciona la torta o pie completo",
-    options: [
-      { id: "tc-16", label: "Torta Triple Chocolate — 16 cm", price: 30.0 },
-      { id: "mp-16", label: "Marquesa de Pirulín — 16 cm", price: 30.0 },
-      { id: "ba-16", label: "Torta Beso de Ángel — 16 cm", price: 35.0 },
-      { id: "pie-parchita-24", label: "Pie de Parchita — 24 cm", price: 40.0 },
-      { id: "pie-limon-24", label: "Pie de Limón — 24 cm", price: 40.0 },
-      { id: "tc-24", label: "Torta Triple Chocolate — 24 cm", price: 60.0 },
-      { id: "mp-24", label: "Marquesa de Pirulín — 24 cm", price: 60.0 },
-      { id: "ba-24", label: "Torta Beso de Ángel — 24 cm", price: 60.0 }
+const BRANCHES = {
+  "Tortas completas": {
+    lead: "Selecciona el postre perfecto para compartir en cada ocasión especial.",
+    categories: [
+      {
+        id: "torta-triple-chocolate",
+        label: "Torta Triple Chocolate",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "ttc-grande", label: "Grande — $65.00", itemName: "Torta Triple Chocolate Grande", price: 65.0 },
+          { id: "ttc-mediana", label: "Mediana — $45.00", itemName: "Torta Triple Chocolate Mediana", price: 45.0 },
+          { id: "ttc-pequena", label: "Pequeña — $30.00", itemName: "Torta Triple Chocolate Pequeña", price: 30.0 }
+        ]
+      },
+      {
+        id: "torta-beso-de-angel",
+        label: "Torta Beso de Ángel",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "tba-grande", label: "Grande — $75.00", itemName: "Torta Beso de Ángel Grande", price: 75.0 },
+          { id: "tba-mediana", label: "Mediana — $55.00", itemName: "Torta Beso de Ángel Mediana", price: 55.0 },
+          { id: "tba-pequena", label: "Pequeña — $35.00", itemName: "Torta Beso de Ángel Pequeña", price: 35.0 }
+        ]
+      },
+      {
+        id: "marquesa-de-piruli",
+        label: "Marquesa de Pirulí",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "mp-grande", label: "Grande — $60.00", itemName: "Marquesa de Pirulí Grande", price: 60.0 },
+          { id: "mp-mediana", label: "Mediana — $45.00", itemName: "Marquesa de Pirulí Mediana", price: 45.0 },
+          { id: "mp-pequena", label: "Pequeña — $30.00", itemName: "Marquesa de Pirulí Pequeña", price: 30.0 }
+        ]
+      },
+      {
+        id: "pay",
+        label: "Pay",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "pay-parchita", label: "Pay de parchita — $40.00", itemName: "Pay de parchita", price: 40.0 },
+          { id: "pay-limon", label: "Pay de limón — $40.00", itemName: "Pay de limón", price: 40.0 }
+        ]
+      }
     ]
   },
-  {
-    id: 2,
-    name: "Porciones",
-    category: "Porciones",
-    stock: 35,
-    description: "Todas nuestras porciones individuales disponibles en una sola selección.",
-    optionLabel: "Selecciona tu porción",
-    options: [
-      { id: "porc-pie-limon", label: "Porción Pie de Limón", price: 3.5 },
-      { id: "porc-pie-parchita", label: "Porción Pie de Parchita", price: 3.5 },
-      { id: "porc-pirulin", label: "Porción Marquesa de Pirulín", price: 5.0 },
-      { id: "porc-triple-choc", label: "Porción Torta Triple Chocolate", price: 6.0 },
-      { id: "porc-zanahoria", label: "Porción Torta de Zanahoria", price: 6.0 },
-      { id: "porc-beso-angel", label: "Porción Torta Beso de Ángel", price: 10.0 }
+  "Porciones": {
+    lead: "",
+    categories: [
+      {
+        id: "porciones-tortas",
+        label: "Tortas y Marquesas",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "porc-beso-angel", label: "Beso de ángel — $10.00", itemName: "Porción Beso de ángel", price: 10.0 },
+          { id: "porc-triple-choc", label: "Torta triple chocolate — $6.00", itemName: "Porción Torta triple chocolate", price: 6.0 },
+          { id: "porc-zanahoria", label: "Torta de zanahoria — $6.00", itemName: "Porción Torta de zanahoria", price: 6.0 },
+          { id: "porc-piruli", label: "Marquesa de pirulí — $5.00", itemName: "Porción Marquesa de pirulí", price: 5.0 }
+        ]
+      },
+      {
+        id: "porciones-pay",
+        label: "Pay",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "porc-pie-limon", label: "Pay de limón — $3.50", itemName: "Porción Pay de limón", price: 3.5 },
+          { id: "porc-pie-parchita", label: "Pay de parchita — $3.50", itemName: "Porción Pay de parchita", price: 3.5 }
+        ]
+      }
     ]
   },
-  {
-    id: 3,
-    name: "New York Cookies",
-    category: "New York Cookies",
-    stock: 40,
-    description: "Galleta gruesa artesanal con variedad de rellenos a elegir.",
-    optionLabel: "Selecciona el relleno",
-    options: [
-      { id: "nyc-blanco", label: "Rellena de Chocolate Blanco", price: 3.5 },
-      { id: "nyc-nutella", label: "Rellena de Nutella", price: 4.5 },
-      { id: "nyc-ovomaltina", label: "Rellena de Ovomaltina", price: 4.5 },
-      { id: "nyc-samba", label: "Rellena de Samba", price: 4.5 },
-      { id: "nyc-brownie-caramelo", label: "Rellena de Brownie con Caramelo Salado", price: 5.5 },
-      { id: "nyc-brownie-nutella", label: "Rellena de Brownie con Nutella", price: 6.0 }
+  "New York Cookies": {
+    lead: "",
+    categories: [
+      {
+        id: "choco-chips",
+        label: "Choco Chips",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "cc-brownie-nutella", label: "Con brownie más Nutella — $6.00", itemName: "Choco Chips con brownie más Nutella", price: 6.0 },
+          { id: "cc-brownie-caramelo", label: "Con brownie más caramelo salado — $5.50", itemName: "Choco Chips con brownie más caramelo salado", price: 5.5 },
+          { id: "cc-brownie", label: "Con brownie — $5.00", itemName: "Choco Chips con brownie", price: 5.0 },
+          { id: "cc-nutella", label: "Relleno con Nutella — $4.50", itemName: "Choco Chips relleno con Nutella", price: 4.5 },
+          { id: "cc-maltina", label: "Relleno con Maltina — $4.50", itemName: "Choco Chips relleno con Maltina", price: 4.5 },
+          { id: "cc-blanco", label: "Relleno con chocolate blanco — $3.50", itemName: "Choco Chips relleno con chocolate blanco", price: 3.5 }
+        ]
+      },
+      {
+        id: "cookie-samba",
+        label: "Cookie Samba",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "cs-nutella", label: "Rellena con Nutella — $5.50", itemName: "Cookie Samba rellena con Nutella", price: 5.5 },
+          { id: "cs-fresas", label: "Rellena con crema de fresas — $5.00", itemName: "Cookie Samba rellena con crema de fresas", price: 5.0 }
+        ]
+      },
+      {
+        id: "chocolate-dark",
+        label: "Chocolate Dark",
+        selectLabel: "Opciones disponibles",
+        options: [
+          { id: "cd-nutella", label: "Relleno con Nutella — $5.00", itemName: "Chocolate Dark relleno con Nutella", price: 5.0 },
+          { id: "cd-maltina", label: "Relleno con Maltina — $5.00", itemName: "Chocolate Dark relleno con Maltina", price: 5.0 },
+          { id: "cd-blanco", label: "Relleno con chocolate blanco — $4.00", itemName: "Chocolate Dark relleno con chocolate blanco", price: 4.0 }
+        ]
+      }
     ]
   }
-];
+};
 
-let selectedCategory = "Tortas completas";
+let activeTab = "Tortas completas";
+let expandedSubcatId = null;
 let cart = [];
 let captureFileName = "";
 
@@ -125,81 +182,96 @@ function formatMoney(amount) {
   return `$${amount.toFixed(2)}`;
 }
 
-function handleCardOptionChange(productId) {
-  const product = PRODUCTS.find((p) => p.id === productId);
-  const select = document.getElementById(`select-product-${productId}`);
-  const priceEl = document.getElementById(`price-product-${productId}`);
-  if (!product || !select || !priceEl) return;
+function selectSubcategory(subcatId) {
+  expandedSubcatId = expandedSubcatId === subcatId ? null : subcatId;
+  renderCatalog();
+}
 
-  const chosen = product.options.find((opt) => opt.id === select.value) || product.options[0];
+function updateSelectedOptionPrice() {
+  const select = document.getElementById("branchOptionSelect");
+  const priceEl = document.getElementById("branchOptionPrice");
+  if (!select || !priceEl) return;
+
+  const branch = BRANCHES[activeTab];
+  const subcat = branch && branch.categories.find((c) => c.id === expandedSubcatId);
+  if (!subcat) return;
+
+  const chosen = subcat.options.find((opt) => opt.id === select.value) || subcat.options[0];
   priceEl.textContent = formatMoney(chosen.price);
 }
 
 function renderCatalog() {
-  const filtered = PRODUCTS.filter((item) => item.category === selectedCategory);
+  const branch = BRANCHES[activeTab];
+  if (!branch) return;
 
-  catalogGrid.innerHTML = filtered
-    .map((product) => {
-      const defaultOpt = product.options[0];
-      const optionsHtml = product.options
-        .map(
-          (opt) =>
-            `<option value="${opt.id}">${opt.label} — ${formatMoney(opt.price)}</option>`
-        )
-        .join("");
+  const leadHtml = branch.lead ? `<p class="branch-lead">${branch.lead}</p>` : "";
 
+  const pillsHtml = branch.categories
+    .map((cat) => {
+      const isActive = cat.id === expandedSubcatId;
       return `
-        <article class="card">
-          <div>
-            <span class="card-tag">${product.category}</span>
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <div class="variant-group">
-              <label for="select-product-${product.id}">${product.optionLabel}:</label>
-              <select id="select-product-${product.id}" class="variant-select" onchange="handleCardOptionChange(${product.id})">
-                ${optionsHtml}
-              </select>
-            </div>
-            <div class="card-meta">Disponibilidad hoy: ${product.stock} unidades</div>
-          </div>
-          <div class="card-bottom">
-            <span class="price" id="price-product-${product.id}">${formatMoney(defaultOpt.price)}</span>
-            <button class="add-btn" onclick="addToCart(${product.id})">Agregar</button>
-          </div>
-        </article>
+        <button
+          type="button"
+          class="subcat-btn ${isActive ? "active" : ""}"
+          onclick="selectSubcategory('${cat.id}')"
+        >
+          ${cat.label}
+        </button>
       `;
     })
     .join("");
-}
 
-function addToCart(productId) {
-  const product = PRODUCTS.find((p) => p.id === productId);
-  if (!product) return;
+  const activeSubcat = branch.categories.find((c) => c.id === expandedSubcatId);
+  let expandedHtml = "";
 
-  const select = document.getElementById(`select-product-${productId}`);
-  const optionId = select ? select.value : product.options[0].id;
-  const option = product.options.find((opt) => opt.id === optionId) || product.options[0];
+  if (activeSubcat) {
+    const firstOpt = activeSubcat.options[0];
+    const optionsHtml = activeSubcat.options
+      .map((opt) => `<option value="${opt.id}">${opt.label}</option>`)
+      .join("");
 
-  const totalUnitsForProduct = cart
-    .filter((item) => item.productId === productId)
-    .reduce((acc, item) => acc + item.quantity, 0);
-
-  if (totalUnitsForProduct >= product.stock) {
-    alert("Has alcanzado la disponibilidad máxima para este producto.");
-    return;
+    expandedHtml = `
+      <div class="expanded-panel">
+        <div class="variant-group">
+          <label for="branchOptionSelect">${activeSubcat.selectLabel}:</label>
+          <select id="branchOptionSelect" class="variant-select" onchange="updateSelectedOptionPrice()">
+            ${optionsHtml}
+          </select>
+        </div>
+        <div class="branch-bottom">
+          <span class="price" id="branchOptionPrice">${formatMoney(firstOpt.price)}</span>
+          <button type="button" class="add-btn" onclick="addSelectedToCart()">Agregar</button>
+        </div>
+      </div>
+    `;
   }
 
-  const cartKey = `${productId}:${option.id}`;
-  const existing = cart.find((item) => item.cartKey === cartKey);
+  catalogGrid.innerHTML = `
+    <article class="branch-card">
+      ${leadHtml}
+      <div class="category-pills">
+        ${pillsHtml}
+      </div>
+      ${expandedHtml}
+    </article>
+  `;
+}
+
+function addSelectedToCart() {
+  const branch = BRANCHES[activeTab];
+  const subcat = branch && branch.categories.find((c) => c.id === expandedSubcatId);
+  const select = document.getElementById("branchOptionSelect");
+  if (!subcat || !select) return;
+
+  const option = subcat.options.find((opt) => opt.id === select.value) || subcat.options[0];
+  const existing = cart.find((item) => item.id === option.id);
 
   if (existing) {
     existing.quantity += 1;
   } else {
     cart.push({
-      cartKey,
-      productId,
-      optionId: option.id,
-      name: `${option.label}`,
+      id: option.id,
+      name: option.itemName,
       price: option.price,
       quantity: 1
     });
@@ -210,27 +282,15 @@ function addToCart(productId) {
   openCart();
 }
 
-function updateQuantity(cartKey, delta) {
-  const index = cart.findIndex((item) => item.cartKey === cartKey);
+function updateQuantity(itemId, delta) {
+  const index = cart.findIndex((item) => item.id === itemId);
   if (index === -1) return;
 
-  const item = cart[index];
-  const product = PRODUCTS.find((p) => p.id === item.productId);
-  const nextQty = item.quantity + delta;
-
+  const nextQty = cart[index].quantity + delta;
   if (nextQty <= 0) {
     cart.splice(index, 1);
   } else {
-    const otherUnits = cart
-      .filter((c) => c.productId === item.productId && c.cartKey !== cartKey)
-      .reduce((acc, c) => acc + c.quantity, 0);
-
-    if (otherUnits + nextQty <= product.stock) {
-      item.quantity = nextQty;
-    } else {
-      alert("No hay más unidades disponibles de este producto.");
-      return;
-    }
+    cart[index].quantity = nextQty;
   }
 
   renderCart();
@@ -289,9 +349,9 @@ function renderCart() {
             <div class="muted">${formatMoney(item.price)} c/u · Total: ${formatMoney(lineTotal)}</div>
           </div>
           <div class="qty-controls">
-            <button class="qty-btn" onclick="updateQuantity('${item.cartKey}', -1)">-</button>
+            <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
             <span>${item.quantity}</span>
-            <button class="qty-btn" onclick="updateQuantity('${item.cartKey}', 1)">+</button>
+            <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
           </div>
         </div>
       `;
@@ -450,7 +510,8 @@ categoryFilters.addEventListener("click", (e) => {
 
   document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
   btn.classList.add("active");
-  selectedCategory = btn.dataset.category;
+  activeTab = btn.dataset.category;
+  expandedSubcatId = null;
   renderCatalog();
 });
 
