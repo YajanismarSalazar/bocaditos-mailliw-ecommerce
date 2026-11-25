@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bocaditos Mailliw | Tienda de Postres</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo.jpg" alt="Logo Bocaditos Mailliw" class="brand-logo" />
+      <div>
+        <h1>Bocaditos Mailliw</h1>
+        <p class="subtitle">Endulza tu vida con nuestros deliciosos postres</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="kpi-pill">
+        <span>Pedidos hoy:</span>
+        <strong id="kpiOrders">0</strong>
+      </div>
+      <button id="toggleCartBtn" class="cart-btn">
+        Carrito (<span id="cartCount">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h2>¡Mira lo que tenemos disponible para hoy!</h2>
+        <p>Explora nuestro catálogo artesanal, elige el tamaño o relleno de tu preferencia y arma tu pedido con retiro en tienda o delivery.</p>
+      </div>
+      <div class="filters" id="categoryFilters">
+        <button class="filter-btn active" data-category="Todos">Todos</button>
+        <button class="filter-btn" data-category="Tortas y Marquesas">Tortas y Marquesas</button>
+        <button class="filter-btn" data-category="New York Cookies">New York Cookies</button>
+        <button class="filter-btn" data-category="Porciones">Porciones</button>
+      </div>
+    </section>
+
+    <section aria-label="Catálogo de postres">
+      <div id="catalogGrid" class="catalog-grid"></div>
+    </section>
+  </main>
+
+  <aside id="cartDrawer" class="cart-drawer hidden" aria-label="Carrito de compras">
+    <div class="cart-header">
+      <h3>Tu Pedido</h3>
+      <button id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div id="cartItems" class="cart-items">
+      <p class="empty-msg">Tu carrito está vacío. Agrega un postre para comenzar.</p>
+    </div>
+
+    <div class="cart-footer">
+      <div class="delivery-box">
+        <label for="deliveryMode">Modalidad de entrega</label>
+        <select id="deliveryMode">
+          <option value="pickup">Pick up — Retiro en tienda ($0.00)</option>
+          <option value="delivery">Delivery a domicilio</option>
+        </select>
+
+        <div id="deliveryZoneWrap" class="hidden">
+          <label for="deliveryZone">Zona de delivery</label>
+          <select id="deliveryZone">
+            <option value="Barcelona" data-fee="3">Barcelona (+$3.00)</option>
+            <option value="Lechería" data-fee="4">Lechería (+$4.00)</option>
+            <option value="Puerto La Cruz" data-fee="5">Puerto La Cruz (+$5.00)</option>
+          </select>
+
+          <label for="deliveryAddress">Dirección exacta de entrega</label>
+          <input type="text" id="deliveryAddress" placeholder="Ej. Urb. Nueva Barcelona, Calle..." />
+        </div>
+      </div>
+
+      <div class="summary-block">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">$0.00</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Empaque y conservación (5%)</span>
+          <span id="cartPackaging">$0.00</span>
+        </div>
+        <div class="summary-row muted">
+          <span>Delivery</span>
+          <span id="cartDelivery">$0.00</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total a pagar</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+      </div>
+
+      <div class="payment-info-box">
+        <div class="payment-info-header">
+          <strong>Datos Pago Móvil — Bocaditos Mailliw</strong>
+          <button type="button" id="copyPaymentBtn" class="mini-copy-btn">Copiar datos</button>
+        </div>
+        <p><strong>Banco:</strong> 0172 - Bancamiga</p>
+        <p><strong>Teléfono:</strong> 04129424001</p>
+        <p><strong>RIF:</strong> J208837067</p>
+        <small>Realiza el pago móvil por el total indicado, ingresa la referencia y adjunta el capture al abrir WhatsApp.</small>
+      </div>
+
+      <div class="customer-box">
+        <label for="customerName">Nombre del cliente *</label>
+        <input type="text" id="customerName" placeholder="Ej. Yajanismar Salazar" />
+
+        <label for="paymentRef">Número de referencia Pago Móvil *</label>
+        <input type="text" id="paymentRef" placeholder="Ej. 00458921" />
+
+        <button id="checkoutBtn" class="primary-btn">ENVIAR COMANDA PAGADA A WHATSAPP</button>
+      </div>
+
+      <div id="orderReceipt" class="order-receipt hidden"></div>
+    </div>
+  </aside>
+
+  <div id="backdrop" class="backdrop hidden"></div>
+
+  <footer class="footer">
+    <p>Bocaditos Mailliw — Repostería Artesanal · Pick up y Delivery en Barcelona, Lechería y Puerto La Cruz</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
