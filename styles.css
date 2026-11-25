@@ -363,13 +363,27 @@ body {
 }
 
 .delivery-box,
+.bcv-rate-box,
 .customer-box {
   display: flex;
   flex-direction: column;
   gap: 7px;
 }
 
+.bcv-rate-box {
+  background: var(--turquoise-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.bcv-rate-box small {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
 .delivery-box label,
+.bcv-rate-box label,
 .customer-box label {
   font-size: 0.84rem;
   font-weight: 600;
@@ -377,6 +391,7 @@ body {
 
 .delivery-box select,
 .delivery-box input,
+.bcv-rate-box input,
 .customer-box input[type="text"] {
   padding: 9px 11px;
   border: 1px solid var(--pink-border);
@@ -427,9 +442,16 @@ body {
 }
 
 .summary-row.total {
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   padding-top: 6px;
   border-top: 1px dashed var(--pink-border);
+  color: var(--text);
+}
+
+.summary-row.total-bs {
+  font-size: 1.12rem;
+  padding-top: 6px;
+  border-top: 1px solid var(--pink-border);
   color: var(--pink);
 }
 

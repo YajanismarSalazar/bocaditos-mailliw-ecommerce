@@ -1,5 +1,7 @@
 const WHATSAPP_PHONE = "584129424001";
 const ORDERS_STORAGE_KEY = "bocaditos_mailliw_orders_state_v1";
+const BCV_RATE_STORAGE_KEY = "bocaditos_mailliw_bcv_rate_v1";
+const DEFAULT_BCV_RATE = 922.5637; // Tasa oficial BCV del día
 
 const PAGO_MOVIL_DATA = {
   empresa: "BOCADITOS MAILLIW",
@@ -129,6 +131,9 @@ const cartSubtotal = document.getElementById("cartSubtotal");
 const cartPackaging = document.getElementById("cartPackaging");
 const cartDelivery = document.getElementById("cartDelivery");
 const cartTotal = document.getElementById("cartTotal");
+const cartTotalBs = document.getElementById("cartTotalBs");
+const bcvRateInput = document.getElementById("bcvRateInput");
+const bcvRateCaption = document.getElementById("bcvRateCaption");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const customerNameInput = document.getElementById("customerName");
 const paymentRefInput = document.getElementById("paymentRef");
@@ -167,13 +172,56 @@ function saveDailyOrdersCount(count) {
   } catch (e) {}
 }
 
+function loadBcvRate() {
+  try {
+    const raw = localStorage.getItem(BCV_RATE_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.date === getTodayKey() && typeof parsed.rate === "number" && parsed.rate > 0) {
+        return parsed.rate;
+      }
+    }
+  } catch (e) {}
+  return DEFAULT_BCV_RATE;
+}
+
+function saveBcvRate(rate) {
+  try {
+    localStorage.setItem(
+      BCV_RATE_STORAGE_KEY,
+      JSON.stringify({ date: getTodayKey(), rate })
+    );
+  } catch (e) {}
+}
+
 let dailyOrdersCount = loadDailyOrdersCount();
 if (kpiOrders) {
   kpiOrders.textContent = dailyOrdersCount;
 }
 
+let currentBcvRate = loadBcvRate();
+if (bcvRateInput) {
+  bcvRateInput.value = currentBcvRate;
+}
+
 function formatMoney(amount) {
   return `$${amount.toFixed(2)}`;
+}
+
+function formatBs(amountBs) {
+  return `Bs. ${amountBs.toLocaleString("es-VE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+function updateBcvRateLabel() {
+  if (bcvRateCaption) {
+    bcvRateCaption.textContent = `Tasa BCV activa: Bs. ${currentBcvRate.toLocaleString("es-VE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4
+    })} / USD`;
+  }
 }
 
 function selectSubcategory(subcatId) {
@@ -320,6 +368,8 @@ function getDeliveryInfo() {
 }
 
 function renderCart() {
+  updateBcvRateLabel();
+
   const totalUnits = cart.reduce((acc, item) => acc + item.quantity, 0);
   cartCount.textContent = totalUnits;
 
@@ -331,6 +381,7 @@ function renderCart() {
     cartPackaging.textContent = formatMoney(0);
     cartDelivery.textContent = formatMoney(deliveryInfo.fee);
     cartTotal.textContent = formatMoney(deliveryInfo.fee);
+    cartTotalBs.textContent = formatBs(deliveryInfo.fee * currentBcvRate);
     return;
   }
 
@@ -359,11 +410,13 @@ function renderCart() {
 
   const packaging = subtotal * 0.05;
   const total = subtotal + packaging + deliveryInfo.fee;
+  const totalBs = total * currentBcvRate;
 
   cartSubtotal.textContent = formatMoney(subtotal);
   cartPackaging.textContent = formatMoney(packaging);
   cartDelivery.textContent = formatMoney(deliveryInfo.fee);
   cartTotal.textContent = formatMoney(total);
+  cartTotalBs.textContent = formatBs(totalBs);
 }
 
 function buildOrderSummary({
@@ -376,7 +429,9 @@ function buildOrderSummary({
   lines,
   subtotal,
   packaging,
-  total
+  total,
+  totalBs,
+  bcvRate
 }) {
   const deliveryLine =
     deliveryInfo.fee > 0
@@ -395,7 +450,9 @@ function buildOrderSummary({
     `• *Subtotal:* ${formatMoney(subtotal)}\n` +
     `• *Empaque (5%):* ${formatMoney(packaging)}\n` +
     `• *Delivery:* ${formatMoney(deliveryInfo.fee)}\n` +
-    `• *TOTAL PAGADO:* ${formatMoney(total)}\n` +
+    `• *TOTAL EN DÓLARES:* ${formatMoney(total)}\n` +
+    `• *Tasa BCV:* Bs. ${bcvRate.toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}\n` +
+    `• *TOTAL PAGADO EN BS.:* ${formatBs(totalBs)}\n` +
     `-------------------------\n` +
     `• *Comprobante:* ${paymentRef}\n` +
     `• *Capture:* ${captureName}\n` +
@@ -463,6 +520,7 @@ function handleCheckout() {
 
   const packaging = subtotal * 0.05;
   const total = subtotal + packaging + deliveryInfo.fee;
+  const totalBs = total * currentBcvRate;
 
   dailyOrdersCount += 1;
   saveDailyOrdersCount(dailyOrdersCount);
@@ -478,7 +536,9 @@ function handleCheckout() {
     lines,
     subtotal,
     packaging,
-    total
+    total,
+    totalBs,
+    bcvRate: currentBcvRate
   });
 
   const whatsappUrl = buildWhatsAppOrderUrl(orderSummary);
@@ -521,6 +581,15 @@ categoryFilters.addEventListener("click", (e) => {
     expandedSubcatId = null;
   }
   renderCatalog();
+});
+
+bcvRateInput.addEventListener("input", () => {
+  const parsed = parseFloat(bcvRateInput.value);
+  if (!Number.isNaN(parsed) && parsed > 0) {
+    currentBcvRate = parsed;
+    saveBcvRate(currentBcvRate);
+    renderCart();
+  }
 });
 
 deliveryModeSelect.addEventListener("change", () => {
