@@ -43,12 +43,12 @@ const BRANCHES = {
         ]
       },
       {
-        id: "pay",
-        label: "Pay",
+        id: "pie",
+        label: "Pie",
         selectLabel: "Opciones disponibles",
         options: [
-          { id: "pay-parchita", label: "Pay de parchita — $40.00", itemName: "Pay de parchita", price: 40.0 },
-          { id: "pay-limon", label: "Pay de limón — $40.00", itemName: "Pay de limón", price: 40.0 }
+          { id: "pie-parchita", label: "Pie de parchita — $40.00", itemName: "Pie de parchita", price: 40.0 },
+          { id: "pie-limon", label: "Pie de limón — $40.00", itemName: "Pie de limón", price: 40.0 }
         ]
       }
     ]
@@ -57,23 +57,16 @@ const BRANCHES = {
     lead: "",
     categories: [
       {
-        id: "porciones-tortas",
-        label: "Tortas y Marquesas",
+        id: "porciones-tortas-marquesas-pie",
+        label: "Tortas, Marquesas y Pie",
         selectLabel: "Opciones disponibles",
         options: [
           { id: "porc-beso-angel", label: "Beso de ángel — $10.00", itemName: "Porción Beso de ángel", price: 10.0 },
           { id: "porc-triple-choc", label: "Torta triple chocolate — $6.00", itemName: "Porción Torta triple chocolate", price: 6.0 },
           { id: "porc-zanahoria", label: "Torta de zanahoria — $6.00", itemName: "Porción Torta de zanahoria", price: 6.0 },
-          { id: "porc-piruli", label: "Marquesa de pirulí — $5.00", itemName: "Porción Marquesa de pirulí", price: 5.0 }
-        ]
-      },
-      {
-        id: "porciones-pay",
-        label: "Pay",
-        selectLabel: "Opciones disponibles",
-        options: [
-          { id: "porc-pie-limon", label: "Pay de limón — $3.50", itemName: "Porción Pay de limón", price: 3.5 },
-          { id: "porc-pie-parchita", label: "Pay de parchita — $3.50", itemName: "Porción Pay de parchita", price: 3.5 }
+          { id: "porc-piruli", label: "Marquesa de pirulín — $5.00", itemName: "Porción Marquesa de pirulín", price: 5.0 },
+          { id: "porc-pie-limon", label: "Pie de limón — $3.50", itemName: "Porción Pie de limón", price: 3.5 },
+          { id: "porc-pie-parchita", label: "Pie de parchita — $3.50", itemName: "Porción Pie de parchita", price: 3.5 }
         ]
       }
     ]
@@ -117,7 +110,7 @@ const BRANCHES = {
   }
 };
 
-let activeTab = "Tortas completas";
+let activeTab = null;
 let expandedSubcatId = null;
 let cart = [];
 let captureFileName = "";
@@ -129,6 +122,7 @@ const backdrop = document.getElementById("backdrop");
 const toggleCartBtn = document.getElementById("toggleCartBtn");
 const closeCartBtn = document.getElementById("closeCartBtn");
 const continueShoppingBtn = document.getElementById("continueShoppingBtn");
+const topContinueShoppingBtn = document.getElementById("topContinueShoppingBtn");
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const cartSubtotal = document.getElementById("cartSubtotal");
@@ -201,6 +195,11 @@ function updateSelectedOptionPrice() {
 }
 
 function renderCatalog() {
+  if (!activeTab) {
+    catalogGrid.innerHTML = "";
+    return;
+  }
+
   const branch = BRANCHES[activeTab];
   if (!branch) return;
 
@@ -398,16 +397,24 @@ function buildOrderSummary({
     `• *Delivery:* ${formatMoney(deliveryInfo.fee)}\n` +
     `• *TOTAL PAGADO:* ${formatMoney(total)}\n` +
     `-------------------------\n` +
-    `*Datos del Pago Móvil:*\n` +
-    `• *Banco destino:* ${PAGO_MOVIL_DATA.banco}\n` +
-    `• *N° de Comprobante:* ${paymentRef}\n` +
-    `• *Capture cargado:* ${captureName}\n` +
-    `_(IMPORTANTE: Adjunta aquí en WhatsApp la foto del capture de pago)_`
+    `• *Comprobante:* ${paymentRef}\n` +
+    `• *Capture:* ${captureName}\n` +
+    `_(Adjunta aquí en WhatsApp la imagen del capture)_`
   );
 }
 
 function buildWhatsAppOrderUrl(message) {
   return `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
+}
+
+function clearConfidentialFields() {
+  customerNameInput.value = "";
+  deliveryAddressInput.value = "";
+  paymentRefInput.value = "";
+  paymentCaptureInput.value = "";
+  captureFileName = "";
+  capturePreview.src = "";
+  capturePreview.classList.add("hidden");
 }
 
 function handleCheckout() {
@@ -432,13 +439,13 @@ function handleCheckout() {
 
   const paymentRef = paymentRefInput.value.trim();
   if (!paymentRef) {
-    alert("Por favor, ingresa el número de comprobante / referencia.");
+    alert("Por favor, ingresa el número de comprobante.");
     paymentRefInput.focus();
     return;
   }
 
   if (!paymentCaptureInput.files || paymentCaptureInput.files.length === 0) {
-    alert("Por favor, carga la foto del capture de pago.");
+    alert("Por favor, carga el capture de pago.");
     paymentCaptureInput.focus();
     return;
   }
@@ -474,27 +481,20 @@ function handleCheckout() {
     total
   });
 
-  const plainReceipt = orderSummary.replace(/\*/g, "").replace(/_/g, "");
-  orderReceipt.textContent = plainReceipt;
-  orderReceipt.classList.remove("hidden");
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(plainReceipt).catch(() => {});
-  }
-
   const whatsappUrl = buildWhatsAppOrderUrl(orderSummary);
   window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 
   cart = [];
-  paymentRefInput.value = "";
-  paymentCaptureInput.value = "";
-  captureFileName = "";
-  capturePreview.src = "";
-  capturePreview.classList.add("hidden");
+  clearConfidentialFields();
   renderCart();
+
+  orderReceipt.textContent =
+    "Tu pedido está listo y fue enviado a WhatsApp. En breves minutos será contactado.";
+  orderReceipt.classList.remove("hidden");
 }
 
 function openCart() {
+  orderReceipt.classList.add("hidden");
   cartDrawer.classList.remove("hidden");
   backdrop.classList.remove("hidden");
 }
@@ -502,16 +502,24 @@ function openCart() {
 function closeCart() {
   cartDrawer.classList.add("hidden");
   backdrop.classList.add("hidden");
+  orderReceipt.classList.add("hidden");
 }
 
 categoryFilters.addEventListener("click", (e) => {
   const btn = e.target.closest(".filter-btn");
   if (!btn) return;
 
-  document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
-  btn.classList.add("active");
-  activeTab = btn.dataset.category;
-  expandedSubcatId = null;
+  const clickedCat = btn.dataset.category;
+  if (activeTab === clickedCat) {
+    activeTab = null;
+    expandedSubcatId = null;
+    btn.classList.remove("active");
+  } else {
+    document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeTab = clickedCat;
+    expandedSubcatId = null;
+  }
   renderCatalog();
 });
 
@@ -559,6 +567,7 @@ copyPaymentBtn.addEventListener("click", () => {
 toggleCartBtn.addEventListener("click", openCart);
 closeCartBtn.addEventListener("click", closeCart);
 continueShoppingBtn.addEventListener("click", closeCart);
+topContinueShoppingBtn.addEventListener("click", closeCart);
 backdrop.addEventListener("click", closeCart);
 checkoutBtn.addEventListener("click", handleCheckout);
 

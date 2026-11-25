@@ -12,7 +12,7 @@
       <img src="logo.jpg" alt="Logo Bocaditos Mailliw" class="brand-logo" />
       <div>
         <h1>Bocaditos Mailliw</h1>
-        <p class="subtitle">Endulza tu vida con nuestros deliciosos postres</p>
+        <p class="subtitle">Bocaditos Mailliw — Endulza tu vida</p>
       </div>
     </div>
 
@@ -31,7 +31,7 @@
     <section class="hero">
       <h2>¡Mira lo que tenemos disponible para hoy!</h2>
       <div class="filters" id="categoryFilters">
-        <button class="filter-btn active" data-category="Tortas completas">Tortas completas</button>
+        <button class="filter-btn" data-category="Tortas completas">Tortas completas</button>
         <button class="filter-btn" data-category="Porciones">Porciones</button>
         <button class="filter-btn" data-category="New York Cookies">New York Cookies</button>
       </div>
@@ -45,7 +45,10 @@
   <aside id="cartDrawer" class="cart-drawer hidden" aria-label="Carrito de compras">
     <div class="cart-header">
       <h3>Tu Pedido</h3>
-      <button id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+      <div class="cart-header-actions">
+        <button type="button" id="topContinueShoppingBtn" class="mini-continue-btn">SEGUIR COMPRANDO</button>
+        <button id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+      </div>
     </div>
 
     <div id="cartItems" class="cart-items">
@@ -68,8 +71,8 @@
             <option value="Puerto La Cruz" data-fee="5">Puerto La Cruz (+$5.00)</option>
           </select>
 
-          <label for="deliveryAddress">Dirección exacta de entrega</label>
-          <input type="text" id="deliveryAddress" placeholder="Ej. Urb. X, Puerto La Cruz" />
+          <label for="deliveryAddress">Dirección exacta de entrega (sea específico)</label>
+          <input type="text" id="deliveryAddress" placeholder="Ej. Urb. X, Calle Y, casa/apto..." />
         </div>
       </div>
 
@@ -94,23 +97,24 @@
 
       <div class="payment-info-box">
         <div class="payment-info-header">
-          <strong>Datos Pago Móvil — Bocaditos Mailliw</strong>
+          <strong>Datos Pago Móvil</strong>
           <button type="button" id="copyPaymentBtn" class="mini-copy-btn">Copiar datos</button>
         </div>
+        <p class="company-name-bold">BOCADITOS MAILLIW</p>
         <p><strong>Banco:</strong> 0172 - Bancamiga</p>
         <p><strong>Teléfono:</strong> 04129424001</p>
         <p><strong>RIF:</strong> J208837067</p>
-        <small>Realiza el pago móvil por el total indicado, ingresa el número de comprobante, carga tu capture y adjúntalo en WhatsApp al abrir el chat.</small>
+        <small>Realiza el pago móvil por el total indicado. Ingresa el número de comprobante, carga tu capture y confirma tu pedido.</small>
       </div>
 
       <div class="customer-box">
         <label for="customerName">Nombre del cliente *</label>
         <input type="text" id="customerName" placeholder="Ej. Miriam" />
 
-        <label for="paymentRef">Número de comprobante / referencia *</label>
+        <label for="paymentRef">Número de comprobante *</label>
         <input type="text" id="paymentRef" placeholder="Ej. 123456" />
 
-        <label for="paymentCapture">Foto del capture de pago *</label>
+        <label for="paymentCapture">Capture *</label>
         <input type="file" id="paymentCapture" accept="image/*" />
         <img id="capturePreview" class="capture-preview hidden" alt="Vista previa del capture" />
 
@@ -123,10 +127,6 @@
   </aside>
 
   <div id="backdrop" class="backdrop hidden"></div>
-
-  <footer class="footer">
-    <p>Bocaditos Mailliw — Repostería Artesanal · Pick up y Delivery en Barcelona, Lechería y Puerto La Cruz</p>
-  </footer>
 
   <script src="app.js"></script>
 </body>
