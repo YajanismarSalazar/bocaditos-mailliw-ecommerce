@@ -144,7 +144,7 @@ body {
 
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
 
@@ -336,12 +336,30 @@ body {
 
 .delivery-box select,
 .delivery-box input,
-.customer-box input {
+.customer-box input[type="text"] {
   padding: 9px 11px;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 0.92rem;
   background: #ffffff;
+}
+
+.customer-box input[type="file"] {
+  font-size: 0.84rem;
+  background: #ffffff;
+  padding: 7px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.capture-preview {
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  padding: 4px;
 }
 
 #deliveryZoneWrap {
@@ -424,6 +442,16 @@ body {
   font-weight: 700;
   cursor: pointer;
   margin-top: 4px;
+}
+
+.secondary-btn {
+  background: var(--turquoise-soft);
+  color: var(--turquoise);
+  border: 1px solid var(--turquoise);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .order-receipt {

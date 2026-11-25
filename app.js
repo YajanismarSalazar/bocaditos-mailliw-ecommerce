@@ -11,84 +11,59 @@ const PAGO_MOVIL_DATA = {
 const PRODUCTS = [
   {
     id: 1,
-    name: "Torta Triple Chocolate",
-    category: "Tortas y Marquesas",
-    stock: 8,
-    description: "Bizcocho húmedo de cacao con relleno y cobertura de chocolate real.",
-    optionLabel: "Selecciona el tamaño",
+    name: "Tortas Completas",
+    category: "Tortas completas",
+    stock: 20,
+    description: "Tortas y pies completos ordenados por tipo de menor a mayor precio.",
+    optionLabel: "Selecciona la torta o pie completo",
     options: [
-      { id: "tc-24", label: "Completa (24 cm)", price: 60.0 },
-      { id: "tc-16", label: "Mediana (16 cm)", price: 30.0 }
+      { id: "tc-16", label: "Torta Triple Chocolate — 16 cm", price: 30.0 },
+      { id: "mp-16", label: "Marquesa de Pirulín — 16 cm", price: 30.0 },
+      { id: "ba-16", label: "Torta Beso de Ángel — 16 cm", price: 35.0 },
+      { id: "pie-parchita-24", label: "Pie de Parchita — 24 cm", price: 40.0 },
+      { id: "pie-limon-24", label: "Pie de Limón — 24 cm", price: 40.0 },
+      { id: "tc-24", label: "Torta Triple Chocolate — 24 cm", price: 60.0 },
+      { id: "mp-24", label: "Marquesa de Pirulín — 24 cm", price: 60.0 },
+      { id: "ba-24", label: "Torta Beso de Ángel — 24 cm", price: 60.0 }
     ]
   },
   {
     id: 2,
-    name: "Marquesa de Almendras",
-    category: "Tortas y Marquesas",
-    stock: 10,
-    description: "Capas suaves de galleta, crema artesanal y almendras seleccionadas.",
-    optionLabel: "Presentación",
+    name: "Porciones",
+    category: "Porciones",
+    stock: 35,
+    description: "Todas nuestras porciones individuales disponibles en una sola selección.",
+    optionLabel: "Selecciona tu porción",
     options: [
-      { id: "ma-24", label: "Completa (24 cm)", price: 60.0 }
+      { id: "porc-pie-limon", label: "Porción Pie de Limón", price: 3.5 },
+      { id: "porc-pie-parchita", label: "Porción Pie de Parchita", price: 3.5 },
+      { id: "porc-pirulin", label: "Porción Marquesa de Pirulín", price: 5.0 },
+      { id: "porc-triple-choc", label: "Porción Torta Triple Chocolate", price: 6.0 },
+      { id: "porc-zanahoria", label: "Porción Torta de Zanahoria", price: 6.0 },
+      { id: "porc-beso-angel", label: "Porción Torta Beso de Ángel", price: 10.0 }
     ]
   },
   {
     id: 3,
-    name: "Torta Beso de Ángel",
-    category: "Tortas y Marquesas",
-    stock: 6,
-    description: "Combinación suave y cremosa con acabado artesanal.",
-    optionLabel: "Presentación",
-    options: [
-      { id: "ba-24", label: "Completa (24 cm)", price: 60.0 }
-    ]
-  },
-  {
-    id: 4,
-    name: "Pies Completos (24 cm)",
-    category: "Tortas y Marquesas",
-    stock: 8,
-    description: "Base crujiente artesanal con relleno cítrico cremoso.",
-    optionLabel: "Selecciona el sabor",
-    options: [
-      { id: "pie-parchita-24", label: "Pie de Parchita (24 cm)", price: 40.0 },
-      { id: "pie-limon-24", label: "Pie de Limón (24 cm)", price: 40.0 }
-    ]
-  },
-  {
-    id: 5,
     name: "New York Cookies",
     category: "New York Cookies",
-    stock: 30,
-    description: "Galleta gruesa dorada por fuera y suave por dentro con centro relleno.",
+    stock: 40,
+    description: "Galleta gruesa artesanal con variedad de rellenos a elegir.",
     optionLabel: "Selecciona el relleno",
     options: [
+      { id: "nyc-blanco", label: "Rellena de Chocolate Blanco", price: 3.5 },
       { id: "nyc-nutella", label: "Rellena de Nutella", price: 4.5 },
-      { id: "nyc-blanco", label: "Rellena de Chocolate Blanco", price: 4.5 },
       { id: "nyc-ovomaltina", label: "Rellena de Ovomaltina", price: 4.5 },
-      { id: "nyc-samba", label: "Rellena de Samba", price: 4.5 }
-    ]
-  },
-  {
-    id: 6,
-    name: "Porciones Individuales",
-    category: "Porciones",
-    stock: 25,
-    description: "Disfruta nuestros postres artesanales en porción individual.",
-    optionLabel: "Selecciona tu porción",
-    options: [
-      { id: "porc-triple-choc", label: "Porción Torta Triple Chocolate", price: 6.0 },
-      { id: "porc-marquesa", label: "Porción Marquesa de Almendras", price: 5.0 },
-      { id: "porc-beso-angel", label: "Porción Torta Beso de Ángel", price: 10.0 },
-      { id: "porc-pie-limon", label: "Porción Pie de Limón", price: 3.5 },
-      { id: "porc-pie-parchita", label: "Porción Pie de Parchita", price: 3.5 },
-      { id: "porc-zanahoria", label: "Porción Torta de Zanahoria", price: 6.0 }
+      { id: "nyc-samba", label: "Rellena de Samba", price: 4.5 },
+      { id: "nyc-brownie-caramelo", label: "Rellena de Brownie con Caramelo Salado", price: 5.5 },
+      { id: "nyc-brownie-nutella", label: "Rellena de Brownie con Nutella", price: 6.0 }
     ]
   }
 ];
 
-let selectedCategory = "Todos";
+let selectedCategory = "Tortas completas";
 let cart = [];
+let captureFileName = "";
 
 const catalogGrid = document.getElementById("catalogGrid");
 const categoryFilters = document.getElementById("categoryFilters");
@@ -96,6 +71,7 @@ const cartDrawer = document.getElementById("cartDrawer");
 const backdrop = document.getElementById("backdrop");
 const toggleCartBtn = document.getElementById("toggleCartBtn");
 const closeCartBtn = document.getElementById("closeCartBtn");
+const continueShoppingBtn = document.getElementById("continueShoppingBtn");
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const cartSubtotal = document.getElementById("cartSubtotal");
@@ -105,6 +81,8 @@ const cartTotal = document.getElementById("cartTotal");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const customerNameInput = document.getElementById("customerName");
 const paymentRefInput = document.getElementById("paymentRef");
+const paymentCaptureInput = document.getElementById("paymentCapture");
+const capturePreview = document.getElementById("capturePreview");
 const deliveryModeSelect = document.getElementById("deliveryMode");
 const deliveryZoneWrap = document.getElementById("deliveryZoneWrap");
 const deliveryZoneSelect = document.getElementById("deliveryZone");
@@ -158,10 +136,7 @@ function handleCardOptionChange(productId) {
 }
 
 function renderCatalog() {
-  const filtered =
-    selectedCategory === "Todos"
-      ? PRODUCTS
-      : PRODUCTS.filter((item) => item.category === selectedCategory);
+  const filtered = PRODUCTS.filter((item) => item.category === selectedCategory);
 
   catalogGrid.innerHTML = filtered
     .map((product) => {
@@ -224,7 +199,7 @@ function addToCart(productId) {
       cartKey,
       productId,
       optionId: option.id,
-      name: `${product.name} (${option.label})`,
+      name: `${option.label}`,
       price: option.price,
       quantity: 1
     });
@@ -338,6 +313,7 @@ function buildOrderSummary({
   now,
   deliveryInfo,
   paymentRef,
+  captureName,
   lines,
   subtotal,
   packaging,
@@ -364,8 +340,9 @@ function buildOrderSummary({
     `-------------------------\n` +
     `*Datos del Pago Móvil:*\n` +
     `• *Banco destino:* ${PAGO_MOVIL_DATA.banco}\n` +
-    `• *N° de Referencia:* ${paymentRef}\n` +
-    `_(Adjunto capture del comprobante a continuación)_`
+    `• *N° de Comprobante:* ${paymentRef}\n` +
+    `• *Capture cargado:* ${captureName}\n` +
+    `_(IMPORTANTE: Adjunta aquí en WhatsApp la foto del capture de pago)_`
   );
 }
 
@@ -375,13 +352,13 @@ function buildWhatsAppOrderUrl(message) {
 
 function handleCheckout() {
   if (cart.length === 0) {
-    alert("Agrega al menos un postre antes de enviar tu comanda.");
+    alert("Agrega al menos un postre antes de confirmar el pedido.");
     return;
   }
 
   const customer = customerNameInput.value.trim();
   if (!customer) {
-    alert("Por favor, escribe tu nombre antes de confirmar el pedido.");
+    alert("Por favor, escribe el nombre del cliente antes de confirmar el pedido.");
     customerNameInput.focus();
     return;
   }
@@ -395,8 +372,14 @@ function handleCheckout() {
 
   const paymentRef = paymentRefInput.value.trim();
   if (!paymentRef) {
-    alert("Por favor, ingresa el número de referencia del Pago Móvil realizado.");
+    alert("Por favor, ingresa el número de comprobante / referencia.");
     paymentRefInput.focus();
+    return;
+  }
+
+  if (!paymentCaptureInput.files || paymentCaptureInput.files.length === 0) {
+    alert("Por favor, carga la foto del capture de pago.");
+    paymentCaptureInput.focus();
     return;
   }
 
@@ -424,6 +407,7 @@ function handleCheckout() {
     now,
     deliveryInfo,
     paymentRef,
+    captureName: captureFileName || paymentCaptureInput.files[0].name,
     lines,
     subtotal,
     packaging,
@@ -443,6 +427,10 @@ function handleCheckout() {
 
   cart = [];
   paymentRefInput.value = "";
+  paymentCaptureInput.value = "";
+  captureFileName = "";
+  capturePreview.src = "";
+  capturePreview.classList.add("hidden");
   renderCart();
 }
 
@@ -477,6 +465,24 @@ deliveryModeSelect.addEventListener("change", () => {
 
 deliveryZoneSelect.addEventListener("change", renderCart);
 
+paymentCaptureInput.addEventListener("change", () => {
+  const file = paymentCaptureInput.files && paymentCaptureInput.files[0];
+  if (!file) {
+    captureFileName = "";
+    capturePreview.src = "";
+    capturePreview.classList.add("hidden");
+    return;
+  }
+
+  captureFileName = file.name;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    capturePreview.src = ev.target.result;
+    capturePreview.classList.remove("hidden");
+  };
+  reader.readAsDataURL(file);
+});
+
 copyPaymentBtn.addEventListener("click", () => {
   const textToCopy = `${PAGO_MOVIL_DATA.empresa}\n${PAGO_MOVIL_DATA.banco}\n${PAGO_MOVIL_DATA.telefono}\n${PAGO_MOVIL_DATA.rif}`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -491,6 +497,7 @@ copyPaymentBtn.addEventListener("click", () => {
 
 toggleCartBtn.addEventListener("click", openCart);
 closeCartBtn.addEventListener("click", closeCart);
+continueShoppingBtn.addEventListener("click", closeCart);
 backdrop.addEventListener("click", closeCart);
 checkoutBtn.addEventListener("click", handleCheckout);
 
