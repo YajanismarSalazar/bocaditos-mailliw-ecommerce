@@ -656,7 +656,7 @@ function handleCheckout() {
   paymentRefInput.value = paymentRef;
   if (!paymentRef || paymentRef.length < 4) {
     showCustomAlert(
-      "Ingresa un número de comprobante válido.",
+      "Ingresa el número de referencia del pago.",
       "Comprobante inválido",
       paymentRefInput
     );
@@ -665,8 +665,8 @@ function handleCheckout() {
 
   if (!paymentCaptureInput.files || paymentCaptureInput.files.length === 0) {
     showCustomAlert(
-      "Carga el comprobante de pago para confirmar el pedido.",
-      "Subir Capture",
+      "Carga la evidencia de pago para confirmar el pedido.",
+      "Subir Comprobante",
       paymentCaptureInput
     );
     return;
