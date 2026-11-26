@@ -657,7 +657,7 @@ function handleCheckout() {
   if (!paymentRef || paymentRef.length < 4) {
     showCustomAlert(
       "Ingresa el número de referencia del pago.",
-      "Comprobante inválido",
+      "Número de comprobante inválido",
       paymentRefInput
     );
     return;
