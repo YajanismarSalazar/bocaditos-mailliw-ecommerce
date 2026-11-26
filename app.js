@@ -612,7 +612,7 @@ function handleCheckout() {
   customerNameInput.value = customer;
   if (!customer || customer.length < 2) {
     showCustomAlert(
-      "Por favor, escribe el nombre del cliente usando solo letras (sin números ni símbolos).",
+      "Escribe tu nombre para continuar.",
       "Nombre inválido",
       customerNameInput
     );
@@ -633,7 +633,7 @@ function handleCheckout() {
     }
     if (!deliveryInfo.address || deliveryInfo.address.length < 5) {
       showCustomAlert(
-        "Por favor, indica una dirección clara de entrega para el delivery.",
+        "Indica una dirección precisa de entrega para el delivery.",
         "Dirección requerida",
         deliveryAddressInput
       );
@@ -656,7 +656,7 @@ function handleCheckout() {
   paymentRefInput.value = paymentRef;
   if (!paymentRef || paymentRef.length < 4) {
     showCustomAlert(
-      "Por favor, ingresa un número de comprobante válido (mínimo 4 dígitos numéricos).",
+      "Ingresa un número de comprobante válido.",
       "Comprobante inválido",
       paymentRefInput
     );
@@ -665,8 +665,8 @@ function handleCheckout() {
 
   if (!paymentCaptureInput.files || paymentCaptureInput.files.length === 0) {
     showCustomAlert(
-      "Por favor, carga el capture de pago antes de confirmar el pedido.",
-      "Capture faltante",
+      "Carga el comprobante de pago para confirmar el pedido.",
+      "Subir Capture",
       paymentCaptureInput
     );
     return;
