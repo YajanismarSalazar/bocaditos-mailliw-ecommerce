@@ -1,18 +1,20 @@
 :root {
-  --bg: #fceef2;
-  --surface: #edf7f1;
-  --card-surface: #f4fbf7;
-  --cart-pink-bg: #fde7f0;
-  --text: #1f2d27;
-  --muted: #4f635a;
-  --pink: #e94e8a;
-  --pink-soft: #fde7f0;
-  --turquoise: #169a9c;
-  --turquoise-soft: #dff3ee;
-  --border: #cde3d7;
-  --pink-border: #f3bed5;
-  --shadow: 0 8px 24px rgba(31, 45, 39, 0.07);
-  --radius: 14px;
+  --bg: #fff5f8;
+  --surface: #ffffff;
+  --card-surface: #fffafc;
+  --cart-pink-bg: #fff0f6;
+  --text: #24302c;
+  --muted: #5c6f68;
+  --pink: #e24a84;
+  --pink-dark: #c7366e;
+  --pink-soft: #ffe4ef;
+  --turquoise: #149698;
+  --turquoise-dark: #0f787a;
+  --turquoise-soft: #e3f6f5;
+  --border: #d9ece8;
+  --pink-border: #f5c2d7;
+  --shadow: 0 10px 26px rgba(226, 74, 132, 0.08);
+  --radius: 16px;
 }
 
 * {
@@ -23,23 +25,26 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg);
+  background: linear-gradient(180deg, #fff5f8 0%, #f1fbf9 100%);
   color: var(--text);
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 .topbar {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pink-border);
   padding: 14px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  box-shadow: 0 4px 16px rgba(226, 74, 132, 0.06);
 }
 
 .brand {
@@ -52,19 +57,19 @@ body {
   width: auto;
   max-width: 180px;
   height: 52px;
-  border-radius: 8px;
+  border-radius: 10px;
   object-fit: contain;
 }
 
 .topbar h1 {
-  font-size: 1.25rem;
+  font-size: 1.28rem;
   color: var(--text);
 }
 
 .subtitle {
   font-size: 0.9rem;
   color: var(--pink);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .header-actions {
@@ -75,7 +80,7 @@ body {
 
 .kpi-pill {
   background: var(--turquoise-soft);
-  color: var(--turquoise);
+  color: var(--turquoise-dark);
   border: 1px solid var(--border);
   padding: 8px 14px;
   border-radius: 999px;
@@ -83,13 +88,19 @@ body {
 }
 
 .cart-btn {
-  background: var(--pink);
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
   color: #fff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(226, 74, 132, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.cart-btn:hover {
+  transform: translateY(-1px);
 }
 
 .container {
@@ -100,7 +111,7 @@ body {
 
 .hero {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--pink-border);
   border-radius: var(--radius);
   padding: 24px;
   box-shadow: var(--shadow);
@@ -111,7 +122,7 @@ body {
 }
 
 .hero h2 {
-  font-size: 1.65rem;
+  font-size: 1.6rem;
   color: var(--text);
 }
 
@@ -122,14 +133,19 @@ body {
 }
 
 .filter-btn {
-  border: 1px solid var(--border);
+  border: 1px solid var(--pink-border);
   background: var(--pink-soft);
   color: var(--text);
-  padding: 9px 16px;
+  padding: 9px 18px;
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.92rem;
   font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--turquoise);
 }
 
 .filter-btn.active {
@@ -146,7 +162,7 @@ body {
 
 .branch-card {
   background: var(--card-surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--pink-border);
   border-radius: var(--radius);
   padding: 24px;
   box-shadow: var(--shadow);
@@ -172,7 +188,7 @@ body {
   background: #ffffff;
   color: var(--text);
   padding: 10px 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 0.92rem;
   font-weight: 600;
@@ -181,7 +197,7 @@ body {
 
 .subcat-btn:hover {
   border-color: var(--turquoise);
-  color: var(--turquoise);
+  color: var(--turquoise-dark);
 }
 
 .subcat-btn.active {
@@ -193,7 +209,7 @@ body {
 .expanded-panel {
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -217,8 +233,8 @@ body {
   max-width: 480px;
   padding: 10px 12px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--card-surface);
+  border-radius: 10px;
+  background: var(--turquoise-soft);
   color: var(--text);
   font-size: 0.92rem;
 }
@@ -244,16 +260,21 @@ body {
   color: #fff;
   border: none;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   font-size: 0.92rem;
   cursor: pointer;
 }
 
+.add-btn:hover {
+  background: var(--turquoise-dark);
+}
+
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(24, 15, 22, 0.45);
+  background: rgba(36, 48, 44, 0.42);
+  backdrop-filter: blur(2px);
   z-index: 30;
 }
 
@@ -267,7 +288,7 @@ body {
   background: var(--cart-pink-bg);
   border-left: 2px solid var(--pink-border);
   z-index: 40;
-  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.14);
+  box-shadow: -8px 0 28px rgba(226, 74, 132, 0.14);
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -330,7 +351,7 @@ body {
 .cart-item {
   background: #ffffff;
   border: 1px solid var(--pink-border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 11px;
   display: flex;
   justify-content: space-between;
@@ -373,17 +394,27 @@ body {
 .bcv-rate-box {
   background: var(--turquoise-soft);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: 12px;
+  padding: 11px 13px;
+}
+
+.bcv-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--turquoise-dark);
+}
+
+.bcv-value {
+  font-size: 1.05rem;
+  color: var(--text);
 }
 
 .bcv-rate-box small {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--muted);
 }
 
 .delivery-box label,
-.bcv-rate-box label,
 .customer-box label {
   font-size: 0.84rem;
   font-weight: 600;
@@ -391,13 +422,21 @@ body {
 
 .delivery-box select,
 .delivery-box input,
-.bcv-rate-box input,
 .customer-box input[type="text"] {
   padding: 9px 11px;
   border: 1px solid var(--pink-border);
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.92rem;
   background: #ffffff;
+  color: var(--text);
+}
+
+.delivery-box input:focus,
+.customer-box input[type="text"]:focus,
+.delivery-box select:focus {
+  outline: none;
+  border-color: var(--turquoise);
+  box-shadow: 0 0 0 3px rgba(20, 150, 152, 0.14);
 }
 
 .customer-box input[type="file"] {
@@ -405,14 +444,14 @@ body {
   background: #ffffff;
   padding: 7px;
   border: 1px solid var(--pink-border);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .capture-preview {
   width: 100%;
   max-height: 150px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--pink-border);
   background: #ffffff;
   padding: 4px;
@@ -428,7 +467,7 @@ body {
 .summary-block {
   background: #ffffff;
   border: 1px solid var(--pink-border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -462,7 +501,7 @@ body {
 .payment-info-box {
   background: #ffffff;
   border: 1px solid var(--pink-border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   font-size: 0.85rem;
   display: flex;
@@ -489,8 +528,8 @@ body {
   background: var(--turquoise);
   color: #fff;
   border: none;
-  padding: 4px 9px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
@@ -503,22 +542,26 @@ body {
 }
 
 .primary-btn {
-  background: var(--pink);
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
   color: #fff;
   border: none;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
   margin-top: 4px;
 }
 
+.primary-btn:hover {
+  opacity: 0.96;
+}
+
 .secondary-btn {
   background: var(--turquoise-soft);
-  color: var(--turquoise);
+  color: var(--turquoise-dark);
   border: 1px solid var(--turquoise);
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -526,7 +569,7 @@ body {
 .order-receipt {
   background: var(--turquoise-soft);
   border: 1px solid var(--turquoise);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   font-size: 0.86rem;
   font-weight: 600;
@@ -537,4 +580,69 @@ body {
 .empty-msg {
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+/* Modal personalizado de alerta Bocaditos Mailliw */
+.bm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(36, 48, 44, 0.48);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.bm-modal-card {
+  width: 100%;
+  max-width: 390px;
+  background: #ffffff;
+  border: 2px solid var(--pink-border);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 18px 40px rgba(226, 74, 132, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+
+.bm-modal-badge {
+  align-self: center;
+  background: var(--pink-soft);
+  color: var(--pink-dark);
+  border: 1px solid var(--pink-border);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.bm-modal-title {
+  font-size: 1.12rem;
+  color: var(--text);
+}
+
+.bm-modal-message {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.bm-modal-btn {
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: #ffffff;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.bm-modal-btn:hover {
+  background: var(--turquoise);
 }

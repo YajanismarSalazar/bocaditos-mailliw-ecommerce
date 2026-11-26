@@ -1,7 +1,7 @@
 const WHATSAPP_PHONE = "584129424001";
 const ORDERS_STORAGE_KEY = "bocaditos_mailliw_orders_state_v1";
 const BCV_RATE_STORAGE_KEY = "bocaditos_mailliw_bcv_rate_v1";
-const DEFAULT_BCV_RATE = 922.5637; // Tasa oficial BCV del día
+const DEFAULT_BCV_RATE = 924.3534; // Tasa oficial BCV del día (26/11/2026)
 
 const PAGO_MOVIL_DATA = {
   empresa: "BOCADITOS MAILLIW",
@@ -116,6 +116,7 @@ let activeTab = null;
 let expandedSubcatId = null;
 let cart = [];
 let captureFileName = "";
+let pendingFocusElement = null;
 
 const catalogGrid = document.getElementById("catalogGrid");
 const categoryFilters = document.getElementById("categoryFilters");
@@ -132,7 +133,7 @@ const cartPackaging = document.getElementById("cartPackaging");
 const cartDelivery = document.getElementById("cartDelivery");
 const cartTotal = document.getElementById("cartTotal");
 const cartTotalBs = document.getElementById("cartTotalBs");
-const bcvRateInput = document.getElementById("bcvRateInput");
+const bcvRateFixedValue = document.getElementById("bcvRateFixedValue");
 const bcvRateCaption = document.getElementById("bcvRateCaption");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const customerNameInput = document.getElementById("customerName");
@@ -147,8 +148,87 @@ const copyPaymentBtn = document.getElementById("copyPaymentBtn");
 const orderReceipt = document.getElementById("orderReceipt");
 const kpiOrders = document.getElementById("kpiOrders");
 
+const alertModal = document.getElementById("customAlertModal");
+const alertTitle = document.getElementById("bmAlertTitle");
+const alertMessage = document.getElementById("bmAlertMessage");
+const alertOkBtn = document.getElementById("bmAlertOkBtn");
+
+function showCustomAlert(message, title = "Verificación requerida", focusEl = null) {
+  pendingFocusElement = focusEl;
+  if (alertTitle) alertTitle.textContent = title;
+  if (alertMessage) alertMessage.textContent = message;
+  if (alertModal) alertModal.classList.remove("hidden");
+  if (alertOkBtn) setTimeout(() => alertOkBtn.focus(), 20);
+}
+
+function closeCustomAlert() {
+  if (alertModal) alertModal.classList.add("hidden");
+  if (pendingFocusElement && typeof pendingFocusElement.focus === "function") {
+    const target = pendingFocusElement;
+    pendingFocusElement = null;
+    setTimeout(() => target.focus(), 20);
+  }
+}
+
+if (alertOkBtn) {
+  alertOkBtn.addEventListener("click", closeCustomAlert);
+}
+if (alertModal) {
+  alertModal.addEventListener("click", (e) => {
+    if (e.target === alertModal) closeCustomAlert();
+  });
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && alertModal && !alertModal.classList.contains("hidden")) {
+    closeCustomAlert();
+  }
+});
+
+/* --- Sanitización y validación estricta de entradas --- */
+function hasInjectionAttempt(rawValue) {
+  const str = String(rawValue || "");
+  return /<\s*\/?\s*script|javascript:|on\w+\s*=|[<>`{}]/i.test(str);
+}
+
+function sanitizeCustomerName(rawValue) {
+  const cleaned = String(rawValue || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s']/g, "")
+    .replace(/\s+/g, " ")
+    .trimStart();
+  return cleaned.slice(0, 80);
+}
+
+function sanitizePaymentRef(rawValue) {
+  return String(rawValue || "")
+    .replace(/\D+/g, "")
+    .slice(0, 20);
+}
+
+function sanitizeAddress(rawValue) {
+  return String(rawValue || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/[<>`{}]/g, "")
+    .replace(/\s+/g, " ")
+    .trimStart()
+    .slice(0, 180);
+}
+
+function sanitizeSafeLabel(rawValue, maxLen = 140) {
+  return String(rawValue || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/[<>`{}]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, maxLen);
+}
+
 function getTodayKey() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function loadDailyOrdersCount() {
@@ -172,7 +252,7 @@ function saveDailyOrdersCount(count) {
   } catch (e) {}
 }
 
-function loadBcvRate() {
+function loadCachedTodayRate() {
   try {
     const raw = localStorage.getItem(BCV_RATE_STORAGE_KEY);
     if (raw) {
@@ -185,7 +265,7 @@ function loadBcvRate() {
   return DEFAULT_BCV_RATE;
 }
 
-function saveBcvRate(rate) {
+function saveTodayRate(rate) {
   try {
     localStorage.setItem(
       BCV_RATE_STORAGE_KEY,
@@ -199,9 +279,37 @@ if (kpiOrders) {
   kpiOrders.textContent = dailyOrdersCount;
 }
 
-let currentBcvRate = loadBcvRate();
-if (bcvRateInput) {
-  bcvRateInput.value = currentBcvRate;
+let currentBcvRate = loadCachedTodayRate();
+saveTodayRate(currentBcvRate);
+
+async function syncDailyBcvRate() {
+  const endpoints = [
+    "https://ve.dolarapi.com/v1/dolares/oficial",
+    "https://pydolarve.org/api/v1/dollar?page=bcv"
+  ];
+
+  for (const url of endpoints) {
+    try {
+      const resp = await fetch(url, { cache: "no-store" });
+      if (!resp.ok) continue;
+      const data = await resp.json();
+
+      const candidate =
+        Number(data?.promedio) ||
+        Number(data?.monitors?.usd?.price) ||
+        Number(data?.price) ||
+        0;
+
+      if (Number.isFinite(candidate) && candidate > 50) {
+        currentBcvRate = Number(candidate.toFixed(4));
+        saveTodayRate(currentBcvRate);
+        renderCart();
+        return;
+      }
+    } catch (err) {
+      // Continuar al siguiente proveedor o mantener la tasa fija del día
+    }
+  }
 }
 
 function formatMoney(amount) {
@@ -216,11 +324,15 @@ function formatBs(amountBs) {
 }
 
 function updateBcvRateLabel() {
+  const formattedRate = currentBcvRate.toLocaleString("es-VE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4
+  });
+  if (bcvRateFixedValue) {
+    bcvRateFixedValue.textContent = `Bs. ${formattedRate} / USD`;
+  }
   if (bcvRateCaption) {
-    bcvRateCaption.textContent = `Tasa BCV activa: Bs. ${currentBcvRate.toLocaleString("es-VE", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 4
-    })} / USD`;
+    bcvRateCaption.textContent = `Tasa oficial del día (${getTodayKey()}) · Fija y no modificable`;
   }
 }
 
@@ -251,7 +363,7 @@ function renderCatalog() {
   const branch = BRANCHES[activeTab];
   if (!branch) return;
 
-  const leadHtml = branch.lead ? `<p class="branch-lead">${branch.lead}</p>` : "";
+  const leadHtml = branch.lead ? `<p class="branch-lead">${sanitizeSafeLabel(branch.lead)}</p>` : "";
 
   const pillsHtml = branch.categories
     .map((cat) => {
@@ -262,7 +374,7 @@ function renderCatalog() {
           class="subcat-btn ${isActive ? "active" : ""}"
           onclick="selectSubcategory('${cat.id}')"
         >
-          ${cat.label}
+          ${sanitizeSafeLabel(cat.label)}
         </button>
       `;
     })
@@ -274,13 +386,13 @@ function renderCatalog() {
   if (activeSubcat) {
     const firstOpt = activeSubcat.options[0];
     const optionsHtml = activeSubcat.options
-      .map((opt) => `<option value="${opt.id}">${opt.label}</option>`)
+      .map((opt) => `<option value="${opt.id}">${sanitizeSafeLabel(opt.label)}</option>`)
       .join("");
 
     expandedHtml = `
       <div class="expanded-panel">
         <div class="variant-group">
-          <label for="branchOptionSelect">${activeSubcat.selectLabel}:</label>
+          <label for="branchOptionSelect">${sanitizeSafeLabel(activeSubcat.selectLabel)}:</label>
           <select id="branchOptionSelect" class="variant-select" onchange="updateSelectedOptionPrice()">
             ${optionsHtml}
           </select>
@@ -355,9 +467,9 @@ function getDeliveryInfo() {
   }
 
   const selectedOpt = deliveryZoneSelect.options[deliveryZoneSelect.selectedIndex];
-  const zone = selectedOpt.value;
+  const zone = sanitizeSafeLabel(selectedOpt.value, 50);
   const fee = parseFloat(selectedOpt.dataset.fee || "0");
-  const address = deliveryAddressInput.value.trim();
+  const address = sanitizeAddress(deliveryAddressInput.value).trim();
 
   return {
     mode: `Delivery (${zone})`,
@@ -395,13 +507,13 @@ function renderCart() {
       return `
         <div class="cart-item">
           <div>
-            <strong>${item.name}</strong>
+            <strong>${sanitizeSafeLabel(item.name)}</strong>
             <div class="muted">${formatMoney(item.price)} c/u · Total: ${formatMoney(lineTotal)}</div>
           </div>
           <div class="qty-controls">
-            <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+            <button type="button" class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
             <span>${item.quantity}</span>
-            <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+            <button type="button" class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
           </div>
         </div>
       `;
@@ -433,14 +545,19 @@ function buildOrderSummary({
   totalBs,
   bcvRate
 }) {
+  const safeCustomer = sanitizeCustomerName(customer).trim();
+  const safeAddress = sanitizeAddress(deliveryInfo.address).trim();
+  const safeRef = sanitizePaymentRef(paymentRef);
+  const safeCapture = sanitizeSafeLabel(captureName, 100);
+
   const deliveryLine =
     deliveryInfo.fee > 0
-      ? `• *Entrega:* ${deliveryInfo.mode} — ${formatMoney(deliveryInfo.fee)}\n• *Dirección:* ${deliveryInfo.address}\n`
-      : `• *Entrega:* ${deliveryInfo.mode}\n`;
+      ? `• *Entrega:* ${sanitizeSafeLabel(deliveryInfo.mode)} — ${formatMoney(deliveryInfo.fee)}\n• *Dirección:* ${safeAddress}\n`
+      : `• *Entrega:* ${sanitizeSafeLabel(deliveryInfo.mode)}\n`;
 
   return (
     `*NUEVO PEDIDO PAGADO #${orderNumber} — BOCADITOS MAILLIW*\n` +
-    `• *Cliente:* ${customer}\n` +
+    `• *Cliente:* ${safeCustomer}\n` +
     `• *Fecha:* ${now}\n` +
     deliveryLine +
     `-------------------------\n` +
@@ -454,8 +571,8 @@ function buildOrderSummary({
     `• *Tasa BCV:* Bs. ${bcvRate.toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}\n` +
     `• *TOTAL PAGADO EN BS.:* ${formatBs(totalBs)}\n` +
     `-------------------------\n` +
-    `• *Comprobante:* ${paymentRef}\n` +
-    `• *Capture:* ${captureName}\n` +
+    `• *Comprobante:* ${safeRef}\n` +
+    `• *Capture:* ${safeCapture}\n` +
     `_(Adjunta aquí en WhatsApp la imagen del capture)_`
   );
 }
@@ -476,34 +593,82 @@ function clearConfidentialFields() {
 
 function handleCheckout() {
   if (cart.length === 0) {
-    alert("Agrega al menos un postre antes de confirmar el pedido.");
+    showCustomAlert("Agrega al menos un postre antes de confirmar el pedido.", "Carrito vacío");
     return;
   }
 
-  const customer = customerNameInput.value.trim();
-  if (!customer) {
-    alert("Por favor, escribe el nombre del cliente antes de confirmar el pedido.");
-    customerNameInput.focus();
+  const rawCustomer = customerNameInput.value;
+  if (hasInjectionAttempt(rawCustomer)) {
+    customerNameInput.value = sanitizeCustomerName(rawCustomer).trim();
+    showCustomAlert(
+      "No se permiten etiquetas, código ni caracteres especiales en el nombre del cliente.",
+      "Entrada no permitida",
+      customerNameInput
+    );
+    return;
+  }
+
+  const customer = sanitizeCustomerName(rawCustomer).trim();
+  customerNameInput.value = customer;
+  if (!customer || customer.length < 2) {
+    showCustomAlert(
+      "Por favor, escribe el nombre del cliente usando solo letras (sin números ni símbolos).",
+      "Nombre inválido",
+      customerNameInput
+    );
     return;
   }
 
   const deliveryInfo = getDeliveryInfo();
-  if (deliveryInfo.fee > 0 && !deliveryInfo.address) {
-    alert("Por favor, indica la dirección exacta para el delivery.");
-    deliveryAddressInput.focus();
+  if (deliveryInfo.fee > 0) {
+    const rawAddress = deliveryAddressInput.value;
+    if (hasInjectionAttempt(rawAddress)) {
+      deliveryAddressInput.value = sanitizeAddress(rawAddress).trim();
+      showCustomAlert(
+        "No se permiten etiquetas ni código en la dirección de entrega.",
+        "Entrada no permitida",
+        deliveryAddressInput
+      );
+      return;
+    }
+    if (!deliveryInfo.address || deliveryInfo.address.length < 5) {
+      showCustomAlert(
+        "Por favor, indica una dirección clara de entrega para el delivery.",
+        "Dirección requerida",
+        deliveryAddressInput
+      );
+      return;
+    }
+  }
+
+  const rawRef = paymentRefInput.value;
+  if (/[^0-9]/.test(String(rawRef || "").trim())) {
+    paymentRefInput.value = sanitizePaymentRef(rawRef);
+    showCustomAlert(
+      "El número de comprobante solo acepta números (0 al 9), sin letras ni caracteres especiales.",
+      "Solo números",
+      paymentRefInput
+    );
     return;
   }
 
-  const paymentRef = paymentRefInput.value.trim();
-  if (!paymentRef) {
-    alert("Por favor, ingresa el número de comprobante.");
-    paymentRefInput.focus();
+  const paymentRef = sanitizePaymentRef(rawRef);
+  paymentRefInput.value = paymentRef;
+  if (!paymentRef || paymentRef.length < 4) {
+    showCustomAlert(
+      "Por favor, ingresa un número de comprobante válido (mínimo 4 dígitos numéricos).",
+      "Comprobante inválido",
+      paymentRefInput
+    );
     return;
   }
 
   if (!paymentCaptureInput.files || paymentCaptureInput.files.length === 0) {
-    alert("Por favor, carga el capture de pago.");
-    paymentCaptureInput.focus();
+    showCustomAlert(
+      "Por favor, carga el capture de pago antes de confirmar el pedido.",
+      "Capture faltante",
+      paymentCaptureInput
+    );
     return;
   }
 
@@ -514,7 +679,7 @@ function handleCheckout() {
     .map((item) => {
       const lineTotal = item.price * item.quantity;
       subtotal += lineTotal;
-      return `• ${item.quantity}x ${item.name} (${formatMoney(lineTotal)})`;
+      return `• ${item.quantity}x ${sanitizeSafeLabel(item.name)} (${formatMoney(lineTotal)})`;
     })
     .join("\n");
 
@@ -565,6 +730,45 @@ function closeCart() {
   orderReceipt.classList.add("hidden");
 }
 
+/* --- Filtros en tiempo real en inputs --- */
+if (customerNameInput) {
+  customerNameInput.addEventListener("input", () => {
+    const cleaned = sanitizeCustomerName(customerNameInput.value);
+    if (customerNameInput.value !== cleaned) {
+      customerNameInput.value = cleaned;
+    }
+  });
+}
+
+if (paymentRefInput) {
+  paymentRefInput.addEventListener("keydown", (e) => {
+    const allowedKeys = [
+      "Backspace", "Delete", "Tab", "Escape", "Enter",
+      "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"
+    ];
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  paymentRefInput.addEventListener("input", () => {
+    const cleaned = sanitizePaymentRef(paymentRefInput.value);
+    if (paymentRefInput.value !== cleaned) {
+      paymentRefInput.value = cleaned;
+    }
+  });
+}
+
+if (deliveryAddressInput) {
+  deliveryAddressInput.addEventListener("input", () => {
+    const cleaned = sanitizeAddress(deliveryAddressInput.value);
+    if (deliveryAddressInput.value !== cleaned) {
+      deliveryAddressInput.value = cleaned;
+    }
+  });
+}
+
 categoryFilters.addEventListener("click", (e) => {
   const btn = e.target.closest(".filter-btn");
   if (!btn) return;
@@ -581,15 +785,6 @@ categoryFilters.addEventListener("click", (e) => {
     expandedSubcatId = null;
   }
   renderCatalog();
-});
-
-bcvRateInput.addEventListener("input", () => {
-  const parsed = parseFloat(bcvRateInput.value);
-  if (!Number.isNaN(parsed) && parsed > 0) {
-    currentBcvRate = parsed;
-    saveBcvRate(currentBcvRate);
-    renderCart();
-  }
 });
 
 deliveryModeSelect.addEventListener("change", () => {
@@ -612,7 +807,7 @@ paymentCaptureInput.addEventListener("change", () => {
     return;
   }
 
-  captureFileName = file.name;
+  captureFileName = sanitizeSafeLabel(file.name, 100);
   const reader = new FileReader();
   reader.onload = (ev) => {
     capturePreview.src = ev.target.result;
@@ -642,3 +837,4 @@ checkoutBtn.addEventListener("click", handleCheckout);
 
 renderCatalog();
 renderCart();
+syncDailyBcvRate();

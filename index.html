@@ -21,7 +21,7 @@
         <span>Pedidos hoy:</span>
         <strong id="kpiOrders">0</strong>
       </div>
-      <button id="toggleCartBtn" class="cart-btn">
+      <button type="button" id="toggleCartBtn" class="cart-btn">
         Carrito (<span id="cartCount">0</span>)
       </button>
     </div>
@@ -31,9 +31,9 @@
     <section class="hero">
       <h2>¡Mira lo que tenemos disponible para hoy!</h2>
       <div class="filters" id="categoryFilters">
-        <button class="filter-btn" data-category="Tortas completas">Tortas completas</button>
-        <button class="filter-btn" data-category="Porciones">Porciones</button>
-        <button class="filter-btn" data-category="New York Cookies">New York Cookies</button>
+        <button type="button" class="filter-btn" data-category="Tortas completas">Tortas completas</button>
+        <button type="button" class="filter-btn" data-category="Porciones">Porciones</button>
+        <button type="button" class="filter-btn" data-category="New York Cookies">New York Cookies</button>
       </div>
     </section>
 
@@ -47,7 +47,7 @@
       <h3>Tu Pedido</h3>
       <div class="cart-header-actions">
         <button type="button" id="topContinueShoppingBtn" class="mini-continue-btn">SEGUIR COMPRANDO</button>
-        <button id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+        <button type="button" id="closeCartBtn" class="icon-btn" aria-label="Cerrar carrito">✕</button>
       </div>
     </div>
 
@@ -72,14 +72,14 @@
           </select>
 
           <label for="deliveryAddress">Dirección exacta de entrega (sea específico)</label>
-          <input type="text" id="deliveryAddress" placeholder="Ej. Urb. X, Calle Y, casa/apto..." />
+          <input type="text" id="deliveryAddress" maxlength="180" placeholder="Ej. Urb. Villa, Calle 2, casa 14" />
         </div>
       </div>
 
-      <div class="bcv-rate-box">
-        <label for="bcvRateInput">Tasa BCV del día (Bs. / $)</label>
-        <input type="number" id="bcvRateInput" step="0.0001" min="0.01" value="922.5637" />
-        <small id="bcvRateCaption">Referencia oficial BCV: Bs. 922,56 / USD</small>
+      <div class="bcv-rate-box" aria-live="polite">
+        <span class="bcv-label">Tasa oficial BCV del día (fija)</span>
+        <strong id="bcvRateFixedValue" class="bcv-value">Bs. 924,3534 / USD</strong>
+        <small id="bcvRateCaption">Sincronización diaria automática · No modificable</small>
       </div>
 
       <div class="summary-block">
@@ -114,21 +114,21 @@
         <p><strong>Banco:</strong> 0172 - Bancamiga</p>
         <p><strong>Teléfono:</strong> 04129424001</p>
         <p><strong>RIF:</strong> J208837067</p>
-        <small>Realiza el pago móvil por el total indicado en Bs. según la tasa BCV. Ingresa el número de comprobante, carga tu capture y confirma tu pedido.</small>
+        <small>Realiza el pago móvil por el total indicado en Bs. según la tasa BCV del día. Ingresa el número de comprobante, carga tu capture y confirma tu pedido.</small>
       </div>
 
       <div class="customer-box">
-        <label for="customerName">Nombre del cliente *</label>
-        <input type="text" id="customerName" placeholder="Ej. Miriam" />
+        <label for="customerName">Nombre del cliente * (solo letras)</label>
+        <input type="text" id="customerName" maxlength="80" autocomplete="name" placeholder="Ej. Miriam Salazar" />
 
-        <label for="paymentRef">Número de comprobante *</label>
-        <input type="text" id="paymentRef" placeholder="Ej. 123456" />
+        <label for="paymentRef">Número de comprobante * (solo números)</label>
+        <input type="text" id="paymentRef" inputmode="numeric" maxlength="20" autocomplete="off" placeholder="Ej. 12345678" />
 
         <label for="paymentCapture">Capture *</label>
         <input type="file" id="paymentCapture" accept="image/*" />
         <img id="capturePreview" class="capture-preview hidden" alt="Vista previa del capture" />
 
-        <button id="checkoutBtn" class="primary-btn">CONFIRMAR PEDIDO</button>
+        <button type="button" id="checkoutBtn" class="primary-btn">CONFIRMAR PEDIDO</button>
         <button type="button" id="continueShoppingBtn" class="secondary-btn">SEGUIR COMPRANDO</button>
       </div>
 
@@ -137,6 +137,16 @@
   </aside>
 
   <div id="backdrop" class="backdrop hidden"></div>
+
+  <!-- Modal de alerta personalizado acorde al estilo de Bocaditos Mailliw -->
+  <div id="customAlertModal" class="bm-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="bmAlertTitle">
+    <div class="bm-modal-card">
+      <div class="bm-modal-badge">Bocaditos Mailliw</div>
+      <h4 id="bmAlertTitle" class="bm-modal-title">Aviso</h4>
+      <p id="bmAlertMessage" class="bm-modal-message"></p>
+      <button type="button" id="bmAlertOkBtn" class="bm-modal-btn">Entendido</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
